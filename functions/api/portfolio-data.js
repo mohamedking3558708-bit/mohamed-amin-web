@@ -2,8 +2,8 @@
 // The GitHub token never reaches the browser: it lives in the Cloudflare secret GITHUB_TOKEN.
 // Auth is the same admin password already used by /api/admin-auth and /api/r2-presign.
 
-const OWNER = 'mazen1-1';
-const REPO = 'mohamed-amin-1';
+const OWNER = 'mohamedking3558708-bit';
+const REPO = 'mohamed-amin-web';
 const BRANCH = 'main';
 const FILE_PATH = 'portfolio-data.json';
 
