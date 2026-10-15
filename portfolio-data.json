@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-15T01:43:55.447Z",
+  "heroVideos": [
+    {
+      "id": "hero-mv8sit1p-wcez8",
+      "url": "/api/media/video-96a7eb82-70b1-4b34-9e83-c9814185acb5.mp4",
+      "showDesktop": true,
+      "showMobile": true
+    },
+    {
+      "id": "hero-mv8v7tpt-w3za0",
+      "url": "/api/media/video-02953dce-122d-4a92-b822-4a98078b8e74.mp4",
+      "showDesktop": true,
+      "showMobile": true
+    }
+  ],
+  "sections": [
+    {
+      "id": "section-mv8tl2p8-4st9c",
+      "title": "Reels editing",
+      "titleAr": "مونتاج الريلز",
+      "order": 1
+    }
+  ],
+  "items": [
+    {
+      "id": "work-mv8trjab-8y9ny",
+      "type": "video",
+      "title": "اعلان تطبيق البرهان",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "r2",
+      "mediaType": "r2",
+      "videoUrl": "/api/media/video-3f6d73ef-bc34-44d0-8ac4-f44db07b0c0c.mp4",
+      "thumbnailUrl": "",
+      "orientation": "vertical",
+      "showOnHome": true
+    },
+    {
+      "id": "work-mv8vkwsn-ifnu9",
+      "type": "video",
+      "title": "ريلز شركة البرهان للمحاماه",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "r2",
+      "mediaType": "r2",
+      "videoUrl": "/api/media/video-d6864555-ace9-4517-b28f-d807b1953a33.mp4",
+      "thumbnailUrl": "",
+      "orientation": "vertical",
+      "showOnHome": true
+    }
+  ],
+  "reviews": []
+}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Studio | Mohamed Amin</title><link rel="icon" type="image/png" href="logo-M.A02%20(1).png"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09070e;--panel:#17121f;--panel2:#20172b;--line:#ffffff1c;--text:#f8f3ff;--muted:#b9adca;--purple:#a855f7;--pink:#e879f9;--green:#57e3a3;--red:#ff7188}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:'IBM Plex Sans Arabic',Inter,sans-serif;background:radial-gradient(ellipse at 50% 0%,#55267d54,transparent 44%),var(--bg)}button,input,textarea,select{font:inherit}.shell{width:min(1440px,calc(100% - clamp(22px,4vw,72px)));margin:auto}.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line);gap:15px}.brand{font-weight:800;font-size:18px}.brand span{color:#d8a9ff}.top-actions{display:flex;gap:9px;flex-wrap:wrap}.button{border:1px solid #ffffff28;background:#241730;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:12px;font-weight:700;transition:.2s}.button.primary{background:linear-gradient(110deg,#6d28d9,#b026e8);border-color:#ffffff2d;box-shadow:0 5px 22px #8b5cf633}.button.danger{border-color:#ff718855;color:#ffc7d0;background:#3a141e}.button.small{padding:7px 10px;font-size:11px}.button:hover{transform:translateY(-1px);filter:brightness(1.08)}.notice{display:none;padding:12px 15px;margin:15px 0;border-radius:11px;font-size:12px;line-height:1.8}.notice.show{display:block}.notice.error{border:1px solid #ff718855;background:#42141e;color:#ffd2d8}.notice.ok{border:1px solid #57e3a355;background:#0f3025;color:#b8ffe0}.notice.info{border:1px solid #c084fc55;background:#21142e;color:#ead9ff}.login-wrap{min-height:calc(100vh - 90px);display:grid;place-items:center}.login-card{width:min(530px,100%);padding:30px;border:1px solid #ffffff24;border-radius:21px;background:linear-gradient(145deg,#1e1729f2,#100d16f5);box-shadow:0 22px 90px #0008}.login-card h1{font-size:26px;margin:0 0 8px}.login-card>p{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 22px}.field{display:flex;flex-direction:column;gap:7px;min-width:0;margin-bottom:14px}.field label{font-size:11px;font-weight:700;color:#e7d9f6}.field input,.field textarea,.field select{width:100%;min-width:0;color:#fff;background:#0e0a14;border:1px solid #ffffff22;border-radius:9px;padding:10px 11px;outline:none}.field input:focus,.field textarea:focus,.field select:focus{border-color:#c084fc;box-shadow:0 0 0 3px #a855f720}.field textarea{min-height:90px;resize:vertical}.field input[type=checkbox]{width:17px;height:17px;accent-color:#a855f7}.field .help{font-size:10px;line-height:1.7;color:#a99db8}.login-warning{border-right:3px solid #e9b949;background:#302716;color:#f5dca4;border-radius:6px;padding:10px 12px;font-size:11px;line-height:1.8;margin:17px 0}.workspace{display:none;padding:19px 0 60px}.workspace.active{display:block}.login-wrap.hidden{display:none}.status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.status-row h1{font-size:24px;margin:0}.status-text{font-size:11px;color:var(--muted)}.tabs{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:20px}.tab{padding:10px 14px;border:1px solid #ffffff24;background:#17121f;border-radius:10px;color:#d4c6e6;cursor:pointer;font-size:12px;font-weight:700}.tab.active{background:linear-gradient(110deg,#6d28d9,#a21caf);color:#fff;border-color:#ddb5ff77}.pane{display:none}.pane.active{display:block}.pane-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:17px}.pane-head h2{font-size:19px;margin:0}.pane-head p{font-size:11px;color:var(--muted);margin:5px 0 0;line-height:1.8}.card-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.editor-card{min-width:0;border:1px solid #ffffff1b;border-radius:15px;background:linear-gradient(145deg,#1b1524,#110e16);padding:17px;position:relative}.editor-card h3{font-size:14px;margin:0 0 14px}.editor-card .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}.field.full{grid-column:1/-1}.checks{display:flex;flex-wrap:wrap;gap:14px;margin:5px 0 15px}.check{display:inline-flex;gap:7px;align-items:center;font-size:11px;color:#ded3ed}.card-actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px;margin-top:9px}.section-maker{border:1px solid #c084fc44;border-radius:14px;padding:17px;margin-bottom:17px;background:#1d1528}.section-maker h3{margin:0 0 12px;font-size:14px}.split{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.pill{display:inline-flex;padding:5px 9px;border-radius:99px;border:1px solid #ffffff20;background:#ffffff08;color:#cdbce0;font-size:10px}.file-upload{border:1px dashed #ffffff31;border-radius:9px;padding:10px;background:#0f0c15}.savebar{position:sticky;bottom:12px;z-index:4;margin-top:22px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1px solid #ffffff24;border-radius:13px;background:#100c17eF;backdrop-filter:blur(15px);box-shadow:0 8px 40px #0008}.savebar span{color:var(--muted);font-size:11px}.inline-help{font-size:11px;color:var(--muted);line-height:1.8;margin:8px 0 14px}.empty-admin{padding:25px;border:1px dashed #ffffff2c;border-radius:12px;text-align:center;color:var(--muted);font-size:12px}.security-note{font-size:10px;line-height:1.8;color:#a99db8;margin-top:11px}
+@media(max-width:780px){.card-list{grid-template-columns:1fr}.split{grid-template-columns:1fr}.editor-card .form-grid{grid-template-columns:1fr}.shell{width:calc(100% - 20px)}.login-card{padding:22px}.status-row h1{font-size:20px}.top{align-items:flex-start;flex-direction:column}.top-actions{width:100%}}
+
+/* Simplified editor interface */
+.pane-head p,.inline-help,.login-card>p,.login-warning,.security-note,.help{display:none!important}
+.shell{width:min(1440px,calc(100% - clamp(22px,4vw,72px)))}
+.top{position:relative;gap:14px}.brand small{display:none!important}
+.top-actions{align-items:center}
+#saveBtn{white-space:nowrap}
+@media(max-width:780px){.shell{width:calc(100% - 20px)}.top-actions{width:100%}.top-actions .button{flex:1}}
+.counter{display:inline-block;margin-top:6px;font-size:11px;color:#d8c4ee}.media-preview{display:block;width:100%;max-height:220px;border-radius:10px;background:#000;object-fit:contain;margin-bottom:12px}.thumb-prev{display:block;max-width:130px;max-height:130px;border-radius:9px;object-fit:cover;background:#000;margin-bottom:12px}.field.full-row{grid-column:1/-1}.section-maker .split{margin-bottom:12px}.button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+</style></head>
+<body><div class="shell"><header class="top"><div class="brand">MOHAMED <span>AMIN</span></div><div class="top-actions"><a class="button" href="index.html" target="_blank" rel="noopener">معاينة الموقع</a><button class="button primary" id="saveBtn" style="display:none">نشر التعديلات</button><button class="button" id="logoutBtn" style="display:none">تسجيل الخروج</button></div></header><div id="notice" class="notice" role="status"></div>
+<section class="login-wrap" id="loginWrap"><form class="login-card" id="loginForm"><h1>لوحة التحكم</h1><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور" required></div><button class="button primary" type="submit" style="width:100%">دخول</button></form></section>
+<main class="workspace" id="workspace"><div class="status-row"><div><h1>إدارة البورتفوليو</h1><div class="status-text" id="repoStatus">جاهز</div></div><div class="top-actions"><button class="button" id="reloadBtn">إعادة تحميل البيانات</button></div></div>
+<div class="tabs"><button class="tab active" data-tab="hero">فيديوهات الهيرو</button><button class="tab" data-tab="work">الأعمال والأقسام</button><button class="tab" data-tab="reviews">آراء العملاء</button></div>
+
+<section class="pane active" id="pane-hero"><div class="pane-head"><div><h2>فيديوهات الهيرو</h2><span class="counter" id="heroCounter"></span></div><button class="button primary" id="addHero">+ إضافة فيديو</button></div><div class="card-list" id="heroList"></div></section>
+
+<section class="pane" id="pane-work">
+<div class="section-maker"><h3>1) إنشاء قسم</h3><div class="split"><div class="field"><label>اسم القسم بالإنجليزية</label><input id="newSectionTitle" placeholder="Reels Editing"></div><div class="field"><label>اسم القسم بالعربية</label><input id="newSectionTitleAr" placeholder="مونتاج الريلز"></div><div class="field"><label>ترتيب القسم</label><input id="newSectionOrder" type="number" value="1" min="1"></div></div><button class="button" id="addSection">+ إضافة القسم</button></div>
+
+<div class="section-maker" id="uploadCard"><h3>2) رفع عمل من الجهاز</h3><div class="notice show error" id="noSectionNote" style="display:none">أنشئ قسمًا واحدًا على الأقل أولًا ثم ارفع الأعمال.</div>
+<div class="split"><div class="field"><label for="workType">نوع العمل</label><select id="workType"><option value="video">فيديو</option><option value="image">صورة</option></select></div><div class="field"><label for="workSection">القسم (إجباري)</label><select id="workSection"></select></div><div class="field"><label for="workTitle" id="workTitleLabel">عنوان الفيديو</label><input id="workTitle" placeholder="عنوان الفيديو"></div>
+<div class="field full-row"><label for="workFile" id="workFileLabel">ملف الفيديو</label><input class="file-upload" id="workFile" type="file" accept="video/*"></div>
+<div class="field full-row" id="workThumbWrap"><label for="workThumbFile">صورة مصغرة (اختياري)</label><input class="file-upload" id="workThumbFile" type="file" accept="image/*"></div>
+<div class="field full-row" id="workDescWrap" style="display:none"><label for="workDescription">الوصف</label><textarea id="workDescription" placeholder="وصف العمل"></textarea></div></div>
+<button class="button primary" id="uploadWork" type="button">رفع ونشر</button></div>
+
+<div class="pane-head"><div><h2>الأقسام الحالية</h2></div></div><div class="card-list" id="sectionList"></div>
+<div class="pane-head" style="margin-top:28px"><div><h2>قائمة الأعمال</h2></div></div><div class="card-list" id="itemsList"></div></section>
+
+<section class="pane" id="pane-reviews"><div class="pane-head"><div><h2>آراء العملاء</h2></div><button class="button primary" id="addReview">+ إضافة رأي</button></div><div class="card-list" id="reviewsList"></div></section>
+</main></div>
+<script>
+(() => {
+ const MAX_VIDEO=5*1024**3, MAX_IMAGE=25*1024*1024;
+ let adminPassword='', busy=false, saving=false, data=rawDefault();
+ const $=id=>document.getElementById(id);
+ const notice=$('notice');
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const makeId=p=>`${p}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
+ function rawDefault(){return {version:1,heroVideos:[],sections:[],items:[],reviews:[]};}
+ function showNotice(message,type='info'){notice.textContent=message;notice.className=`notice show ${type}`;notice.scrollIntoView({behavior:'smooth',block:'nearest'});}
+ function clearNotice(){notice.className='notice';notice.textContent='';}
+ function normalizeLoaded(next){const arr=v=>Array.isArray(v)?v:[];return {...rawDefault(),...next,heroVideos:arr(next?.heroVideos),sections:arr(next?.sections),items:arr(next?.items),reviews:arr(next?.reviews)};}
+
+ // ---------- server API (password only; the GitHub token lives in Cloudflare) ----------
+ async function api(path,body){
+  const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':adminPassword},body:JSON.stringify(body)});
+  let result={};try{result=await response.json()}catch{}
+  if(!response.ok){const error=new Error(result.error||`تعذر إتمام الطلب (${response.status})`);error.status=response.status;throw error;}
+  return result;
+ }
+ async function loadData(showMessage=true){
+  clearNotice();
+  try{const result=await api('/api/portfolio-data',{action:'load'});data=normalizeLoaded(result.data);renderAll();$('repoStatus').textContent='متصل';if(showMessage)showNotice(result.exists?'تم تحميل البيانات.':'لا توجد بيانات بعد، سيُنشأ الملف عند أول نشر.','ok');}
+  catch(error){showNotice(`تعذر تحميل البيانات: ${error.message}`,'error');throw error;}
+ }
+
+ // ---------- validation / publish ----------
+ function validate(){
+  if(data.heroVideos.length>3)return 'الحد الأقصى ثلاثة فيديوهات في الهيرو.';
+  if(data.heroVideos.filter(v=>v.showDesktop!==false).length>2)return 'اختر فيديوهين فقط كحد أقصى للكمبيوتر.';
+  if(data.heroVideos.filter(v=>v.showMobile!==false).length>3)return 'اختر ثلاثة فيديوهات كحد أقصى للهاتف.';
+  for(let i=0;i<data.heroVideos.length;i++)if(!data.heroVideos[i].url)return `ارفع فيديو الهيرو رقم ${i+1} أو احذف البطاقة.`;
+  if(data.items.length&&!data.sections.length)return 'أنشئ قسمًا واحدًا على الأقل.';
+  const ids=new Set(data.sections.map(s=>String(s.id)));
+  for(let i=0;i<data.items.length;i++){
+   const item=data.items[i];
+   if(!String(item.title||'').trim())return item.type==='image'?`أدخل اسم العميل للصورة رقم ${i+1}.`:`أدخل عنوان الفيديو رقم ${i+1}.`;
+   if(!ids.has(String(item.sectionId||'')))return `اختر القسم للعمل رقم ${i+1}.`;
+   if(item.type==='image'&&!item.imageUrl)return `الصورة رقم ${i+1} بلا ملف.`;
+   if(item.type!=='image'&&!item.videoUrl)return `الفيديو رقم ${i+1} بلا ملف.`;
+  }
+  return '';
+ }
+ async function saveData(){
+  if(saving)return false;
+  const problem=validate();
+  if(problem){showNotice(problem,'error');return false;}
+  saving=true;clearNotice();$('saveBtn').disabled=true;let ok=false;
+  try{await api('/api/portfolio-data',{action:'save',data});$('repoStatus').textContent='تم النشر';showNotice('تم نشر التعديلات. قد يستغرق ظهورها على الموقع دقيقة أو دقيقتين.','ok');ok=true;}
+  catch(error){showNotice(`تعذر نشر التعديلات: ${error.message}`,'error');}
+  finally{saving=false;$('saveBtn').disabled=false;}
+  return ok;
+ }
+
+ // ---------- uploads (always from the device, straight to R2) ----------
+ function inferMediaType(file){const reported=String(file.type||'').split(';')[0].trim().toLowerCase();if(reported.startsWith('video/')||reported.startsWith('image/'))return reported;const ext=String(file.name||'').split('.').pop().toLowerCase();return ({mp4:'video/mp4',m4v:'video/x-m4v',mov:'video/quicktime',webm:'video/webm',mkv:'video/x-matroska',ogv:'video/ogg',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',avif:'image/avif'})[ext]||reported;}
+ function checkFile(file,kind){
+  const type=inferMediaType(file);
+  if(kind==='video'){if(!type.startsWith('video/'))throw new Error('اختر ملف فيديو (MP4 أو MOV أو WebM).');if(file.size>MAX_VIDEO)throw new Error('الحد الأقصى للفيديو 5 جيجابايت.');}
+  else{if(!type.startsWith('image/'))throw new Error('اختر ملف صورة صالحًا.');if(file.size>MAX_IMAGE)throw new Error('حجم الصورة أكبر من 25 ميجابايت.');}
+  return type;
+ }
+ async function requestR2Upload(file,contentType){
+  const response=await fetch('/api/r2-presign',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':adminPassword},body:JSON.stringify({filename:file.name,contentType,size:file.size})});
+  let result={};try{result=await response.json()}catch{}
+  if(!response.ok)throw new Error(result.error||`تعذر بدء الرفع (${response.status}).`);
+  return result;
+ }
+ function putFile(file,uploadUrl,label,contentType){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('PUT',uploadUrl);xhr.setRequestHeader('Content-Type',contentType);xhr.upload.onprogress=e=>{if(e.lengthComputable){notice.textContent=`جارٍ رفع ${label}: ${Math.round(e.loaded/e.total*100)}%`;notice.className='notice show info';}};xhr.onload=()=>xhr.status>=200&&xhr.status<300?resolve():reject(new Error(`رفض تخزين الملف (${xhr.status}). راجع إعداد CORS في R2.`));xhr.onerror=()=>reject(new Error('فشل الاتصال بـ R2. راجع إعداد CORS في إعدادات الحاوية.'));xhr.onabort=()=>reject(new Error('تم إلغاء الرفع.'));xhr.send(file);});}
+ async function uploadToR2(file,kind){
+  const type=checkFile(file,kind);
+  if(!adminPassword)throw new Error('سجّل الدخول مجددًا.');
+  const signed=await requestR2Upload(file,type);
+  await putFile(file,signed.uploadUrl,file.name,signed.contentType||type);
+  return signed.mediaUrl;
+ }
+ function detectOrientation(file){return new Promise(resolve=>{const url=URL.createObjectURL(file);const v=document.createElement('video');let finished=false;const done=o=>{if(finished)return;finished=true;URL.revokeObjectURL(url);resolve(o);};v.preload='metadata';v.muted=true;v.onloadedmetadata=()=>done(v.videoWidth>v.videoHeight?'horizontal':'vertical');v.onerror=()=>done('vertical');setTimeout(()=>done('vertical'),4000);v.src=url;});}
+ async function guarded(task){if(busy){showNotice('انتظر حتى ينتهي الرفع الحالي.','error');return;}busy=true;try{await task();}catch(error){showNotice(error.message||'حدث خطأ غير متوقع.','error');}finally{busy=false;}}
+
+ // ---------- tabs / ordering ----------
+ function activateTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('active',p.id===`pane-${name}`));}
+ function moveItem(arr,index,step){const target=index+step;if(target<0||target>=arr.length)return;const [row]=arr.splice(index,1);arr.splice(target,0,row);if(arr===data.sections)arr.forEach((s,i)=>s.order=i+1);renderAll();}
+ function deleteRow(name,index){
+  const labels={heroVideos:'فيديو الهيرو',sections:'القسم',items:'العمل',reviews:'رأي العميل'};
+  if(name==='sections'){const section=data.sections[index];if(data.items.some(i=>String(i.sectionId)===String(section.id))){showNotice('هذا القسم يحتوي أعمالًا. انقلها لقسم آخر أو احذفها أولًا.','error');return;}}
+  if(!confirm(`هل تريد حذف ${labels[name]}؟`))return;
+  data[name].splice(index,1);renderAll();showNotice('تم الحذف من التعديلات الحالية. اضغط «نشر التعديلات» لحفظه.','info');
+ }
+
+ // ---------- rendering ----------
+ const actions=(name,i,delLabel)=>`<div class="card-actions"><button class="button small" data-move="${name}" data-index="${i}" data-step="-1">↑ للأعلى</button><button class="button small" data-move="${name}" data-index="${i}" data-step="1">↓ للأسفل</button><button class="button danger small" data-delete="${name}" data-index="${i}">${delLabel}</button></div>`;
+ const field=(col,i,f)=>`data-collection="${col}" data-index="${i}" data-field="${f}"`;
+ function heroCounts(){return {pc:data.heroVideos.filter(v=>v.showDesktop!==false).length,ph:data.heroVideos.filter(v=>v.showMobile!==false).length};}
+ function renderHero(){
+  const {pc,ph}=heroCounts();
+  $('heroCounter').textContent=`${data.heroVideos.length}/3 فيديوهات · الكمبيوتر ${pc}/2 · الهاتف ${ph}/3`;
+  $('addHero').disabled=data.heroVideos.length>=3;
+  const root=$('heroList');
+  if(!data.heroVideos.length){root.innerHTML='<div class="empty-admin">لا توجد فيديوهات بعد. أضف حتى ثلاثة فيديوهات من جهازك.</div>';return;}
+  const pcSlots=['يسار','يمين'], phSlots={1:['وسط'],2:['يسار','يمين'],3:['يسار','وسط','يمين']};
+  let pcSeen=0,phSeen=0;
+  root.innerHTML=data.heroVideos.map((v,i)=>{
+   const pcPos=v.showDesktop!==false&&pcSeen<2?pcSlots[pcSeen++]:'';
+   const phList=phSlots[Math.min(ph,3)]||[];
+   const phPos=v.showMobile!==false&&phSeen<3?phList[phSeen++]||'':'';
+   return `<article class="editor-card"><h3>فيديو ${i+1} ${pcPos?`<span class="pill">كمبيوتر: ${pcPos}</span>`:''} ${phPos?`<span class="pill">هاتف: ${phPos}</span>`:''}</h3>${v.url?`<video class="media-preview" src="${esc(v.url)}#t=0.1" controls muted playsinline preload="metadata"></video>`:'<div class="empty-admin" style="margin-bottom:12px">لم يُرفع فيديو بعد</div>'}<div class="field"><label>${v.url?'استبدال الفيديو من الجهاز':'ارفع الفيديو من الجهاز'}</label><input class="file-upload" type="file" accept="video/*" data-hero-file="${i}"></div><div class="checks"><label class="check"><input type="checkbox" ${field('heroVideos',i,'showDesktop')} ${v.showDesktop!==false?'checked':''}> يظهر على الكمبيوتر</label><label class="check"><input type="checkbox" ${field('heroVideos',i,'showMobile')} ${v.showMobile!==false?'checked':''}> يظهر على الهاتف</label></div>${actions('heroVideos',i,'حذف')}</article>`;
+  }).join('');
+ }
+ function renderSections(){
+  const root=$('sectionList');
+  if(!data.sections.length){root.innerHTML='<div class="empty-admin">لم تُضف أي أقسام بعد.</div>';return;}
+  root.innerHTML=data.sections.map((s,i)=>`<article class="editor-card"><h3>القسم ${i+1}</h3><div class="form-grid"><div class="field"><label>اسم القسم بالإنجليزية</label><input ${field('sections',i,'title')} value="${esc(s.title)}"></div><div class="field"><label>اسم القسم بالعربية</label><input ${field('sections',i,'titleAr')} value="${esc(s.titleAr)}"></div><div class="field"><label>ترتيب القسم</label><input type="number" ${field('sections',i,'order')} value="${esc(s.order??i+1)}"></div></div>${actions('sections',i,'حذف القسم')}</article>`).join('');
+ }
+ function sectionOptions(selected){
+  const sorted=data.sections.slice().sort((a,b)=>(a.order??0)-(b.order??0));
+  const valid=sorted.some(s=>String(s.id)===String(selected||''));
+  return `<option value="" disabled ${valid?'':'selected'}>اختر القسم</option>`+sorted.map(s=>`<option value="${esc(s.id)}" ${String(s.id)===String(selected||'')?'selected':''}>${esc(s.titleAr||s.title)}</option>`).join('');
+ }
+ function renderWorkSectionSelect(){
+  const select=$('workSection');const previous=select.value;
+  select.innerHTML=sectionOptions(data.sections.some(s=>String(s.id)===previous)?previous:'');
+  const none=!data.sections.length;$('noSectionNote').style.display=none?'block':'none';
+  ['workType','workSection','workTitle','workFile','workThumbFile','workDescription','uploadWork'].forEach(id=>$(id).disabled=none);
+ }
+ function renderItems(){
+  const root=$('itemsList');
+  if(!data.items.length){root.innerHTML='<div class="empty-admin">لم تُضف أعمال بعد.</div>';return;}
+  root.innerHTML=data.items.map((item,i)=>{
+   const isImage=item.type==='image';
+   const preview=isImage?(item.imageUrl?`<img class="thumb-prev" src="${esc(item.imageUrl)}" alt="">`:''):(item.thumbnailUrl?`<img class="thumb-prev" src="${esc(item.thumbnailUrl)}" alt="">`:(item.videoUrl?`<video class="thumb-prev" src="${esc(item.videoUrl)}#t=0.1" muted playsinline preload="metadata"></video>`:''));
+   const specific=isImage
+    ?`<div class="field full"><label>الوصف</label><textarea ${field('items',i,'description')}>${esc(item.description)}</textarea></div><div class="field full"><label>استبدال الصورة من الجهاز</label><input class="file-upload" type="file" accept="image/*" data-item-image="${i}"></div>`
+    :`<div class="field"><label>الاتجاه</label><select ${field('items',i,'orientation')}><option value="vertical" ${item.orientation!=='horizontal'?'selected':''}>طولي / رأسي</option><option value="horizontal" ${item.orientation==='horizontal'?'selected':''}>عرضي / أفقي</option></select></div><div class="field"><label>صورة مصغرة (اختياري)</label><input class="file-upload" type="file" accept="image/*" data-item-thumb="${i}"></div>${item.thumbnailUrl?`<div class="field full"><button class="button small" type="button" data-clear-thumb="${i}">إزالة الصورة المصغرة</button></div>`:''}`;
+   const checks=isImage
+    ?`<label class="check"><input type="checkbox" ${field('items',i,'visible')} ${item.visible!==false?'checked':''}> منشور في صفحة الأعمال</label>`
+    :`<label class="check"><input type="checkbox" ${field('items',i,'visible')} ${item.visible!==false?'checked':''}> منشور في صفحة الأعمال</label><label class="check"><input type="checkbox" ${field('items',i,'showOnHome')} ${item.showOnHome!==false?'checked':''}> يظهر في شريط My Work بالرئيسية</label>`;
+   return `<article class="editor-card"><h3>العمل ${i+1} <span class="pill">${isImage?'صورة':'فيديو'}</span></h3>${preview}<div class="form-grid"><div class="field"><label>${isImage?'اسم العميل':'عنوان الفيديو'}</label><input ${field('items',i,'title')} value="${esc(item.title)}"></div><div class="field"><label>القسم</label><select ${field('items',i,'sectionId')}>${sectionOptions(item.sectionId)}</select></div>${specific}</div><div class="checks">${checks}</div>${actions('items',i,'حذف العمل')}</article>`;
+  }).join('');
+ }
+ function renderReviews(){
+  const root=$('reviewsList');
+  if(!data.reviews.length){root.innerHTML='<div class="empty-admin">لم تُضف آراء العملاء بعد.</div>';return;}
+  root.innerHTML=data.reviews.map((r,i)=>{const img=r.mode==='image';return `<article class="editor-card"><h3>رأي العميل ${i+1}</h3><div class="form-grid"><div class="field"><label>نوع العرض</label><select ${field('reviews',i,'mode')}><option value="text" ${!img?'selected':''}>نص رأي</option><option value="image" ${img?'selected':''}>صورة رأي</option></select></div><div class="field"><label>اسم العميل / اسم اختياري</label><input ${field('reviews',i,'clientName')} value="${esc(r.clientName)}"></div><div class="field full"><label>النص أو التفاصيل</label><textarea ${field('reviews',i,img?'detail':'content')}>${esc(img?(r.detail||r.content):(r.content||''))}</textarea></div>${img?`${r.imageUrl?`<div class="field full"><img class="thumb-prev" src="${esc(r.imageUrl)}" alt=""></div>`:''}<div class="field full"><label>رفع صورة رأي العميل من الجهاز (حتى 25 ميجابايت)</label><input class="file-upload" type="file" accept="image/*" data-review-image="${i}"></div>`:''}<div class="field full"><label>اسم زر الاختيار الاختياري</label><input ${field('reviews',i,'label')} value="${esc(r.label)}" placeholder="رأي العميل الأول"></div></div><div class="checks"><label class="check"><input type="checkbox" ${field('reviews',i,'visible')} ${r.visible!==false?'checked':''}> ظاهر على الموقع</label></div>${actions('reviews',i,'حذف الرأي')}</article>`;}).join('');
+ }
+ function renderAll(){renderHero();renderSections();renderWorkSectionSelect();renderItems();renderReviews();}
+
+ // ---------- actions ----------
+ function addHero(){if(data.heroVideos.length>=3){showNotice('الحد الأقصى ثلاثة فيديوهات.','error');return;}data.heroVideos.push({id:makeId('hero'),url:'',showDesktop:true,showMobile:true});renderHero();}
+ function addReview(){data.reviews.push({id:makeId('review'),mode:'text',clientName:'',content:'',detail:'',imageUrl:'',label:'',visible:true});renderReviews();}
+ function syncWorkForm(){
+  const video=$('workType').value==='video';
+  $('workTitleLabel').textContent=video?'عنوان الفيديو':'اسم العميل';
+  $('workTitle').placeholder=video?'عنوان الفيديو':'اسم العميل';
+  $('workFileLabel').textContent=video?'ملف الفيديو':'ملف الصورة';
+  $('workFile').accept=video?'video/*':'image/*';$('workFile').value='';
+  $('workThumbWrap').style.display=video?'':'none';
+  $('workDescWrap').style.display=video?'none':'';
+ }
+ async function uploadWork(){
+  const type=$('workType').value;
+  const file=$('workFile').files?.[0];
+  const sectionId=$('workSection').value;
+  if(!data.sections.length)throw new Error('أنشئ قسمًا واحدًا على الأقل أولًا.');
+  if(!sectionId)throw new Error('اختر القسم، وهو إجباري.');
+  if(!file)throw new Error(type==='video'?'اختر ملف الفيديو من جهازك.':'اختر ملف الصورة من جهازك.');
+  checkFile(file,type);
+  let title=$('workTitle').value.trim();
+  if(type==='image'&&!title)throw new Error('اكتب اسم العميل.');
+  if(!title)title=file.name.replace(/\.[^.]+$/,'');
+  const button=$('uploadWork');button.disabled=true;
+  try{
+   let item;
+   if(type==='video'){
+    const orientation=await detectOrientation(file);
+    const videoUrl=await uploadToR2(file,'video');
+    let thumbnailUrl='';const thumb=$('workThumbFile').files?.[0];
+    if(thumb){try{thumbnailUrl=await uploadToR2(thumb,'image');}catch(error){showNotice(`تم رفع الفيديو لكن تعذر رفع الصورة المصغرة: ${error.message}`,'error');}}
+    item={id:makeId('work'),type:'video',storage:'r2',mediaType:'r2',title,sectionId,videoUrl,thumbnailUrl,orientation,visible:true,showOnHome:true};
+   }else{
+    const imageUrl=await uploadToR2(file,'image');
+    item={id:makeId('work'),type:'image',title,sectionId,imageUrl,description:$('workDescription').value.trim(),visible:true};
+   }
+   data.items.push(item);renderItems();
+   const published=await saveData();
+   if(published){['workTitle','workFile','workThumbFile','workDescription'].forEach(id=>$(id).value='');showNotice('تم رفع العمل ونشره.','ok');}
+   else showNotice('تم الرفع وإضافة العمل، لكن لم يُنشر ملف البيانات. اضغط «نشر التعديلات» للمحاولة مجددًا.','error');
+  }finally{button.disabled=false;}
+ }
+ async function uploadInto(input,kind,apply,message){
+  const file=input.files?.[0];if(!file)return;
+  input.disabled=true;
+  try{const url=await uploadToR2(file,kind);apply(url);showNotice(message,'ok');}
+  finally{input.disabled=false;input.value='';}
+ }
+
+ // ---------- events ----------
+ document.addEventListener('input',event=>{
+  const el=event.target;if(!el.matches('[data-collection][data-field]'))return;
+  const row=data[el.dataset.collection]?.[Number(el.dataset.index)];if(!row)return;
+  if(el.type==='checkbox'||el.tagName==='SELECT')return;
+  row[el.dataset.field]=el.type==='number'?Number(el.value):el.value;
+ });
+ document.addEventListener('change',event=>{
+  const el=event.target;
+  if(el.matches('[data-collection][data-field]')){
+   const col=el.dataset.collection,row=data[col]?.[Number(el.dataset.index)];if(!row)return;
+   const f=el.dataset.field;
+   if(col==='heroVideos'&&el.type==='checkbox'){
+    const limit=f==='showDesktop'?2:3;
+    const count=data.heroVideos.filter((v,idx)=>idx!==Number(el.dataset.index)&&v[f]!==false).length;
+    if(el.checked&&count>=limit){el.checked=false;showNotice(f==='showDesktop'?'الكمبيوتر يعرض فيديوهين فقط.':'الهاتف يعرض ثلاثة فيديوهات فقط.','error');return;}
+    row[f]=el.checked;renderHero();return;
+   }
+   row[f]=el.type==='checkbox'?el.checked:(el.type==='number'?Number(el.value):el.value);
+   if(col==='reviews'&&f==='mode')renderReviews();
+   if(col==='sections')renderAll();
+   return;
+  }
+  if(el.id==='workType'){syncWorkForm();return;}
+  const idx=Number(el.dataset.heroFile??el.dataset.itemThumb??el.dataset.itemImage??el.dataset.reviewImage);
+  if(el.matches('[data-hero-file]'))guarded(()=>uploadInto(el,'video',url=>{data.heroVideos[idx].url=url;renderHero();},'تم رفع الفيديو. اضغط «نشر التعديلات» لحفظه.'));
+  else if(el.matches('[data-item-thumb]'))guarded(()=>uploadInto(el,'image',url=>{data.items[idx].thumbnailUrl=url;renderItems();},'تمت إضافة الصورة المصغرة. اضغط «نشر التعديلات».'));
+  else if(el.matches('[data-item-image]'))guarded(()=>uploadInto(el,'image',url=>{data.items[idx].imageUrl=url;renderItems();},'تم استبدال الصورة. اضغط «نشر التعديلات».'));
+  else if(el.matches('[data-review-image]'))guarded(()=>uploadInto(el,'image',url=>{data.reviews[idx].imageUrl=url;renderReviews();},'تمت إضافة صورة الرأي. اضغط «نشر التعديلات».'));
+ });
+ document.addEventListener('click',event=>{
+  const tab=event.target.closest('[data-tab]');if(tab){activateTab(tab.dataset.tab);return;}
+  const move=event.target.closest('[data-move]');if(move){moveItem(data[move.dataset.move],Number(move.dataset.index),Number(move.dataset.step));return;}
+  const del=event.target.closest('[data-delete]');if(del){deleteRow(del.dataset.delete,Number(del.dataset.index));return;}
+  const clear=event.target.closest('[data-clear-thumb]');if(clear){data.items[Number(clear.dataset.clearThumb)].thumbnailUrl='';renderItems();}
+ });
+ $('loginForm').addEventListener('submit',async event=>{
+  event.preventDefault();clearNotice();
+  const password=$('password').value;const submit=$('loginForm').querySelector('button[type=submit]');
+  submit.disabled=true;submit.textContent='جارٍ الدخول...';
+  try{
+   const response=await fetch('/api/admin-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
+   let result={};try{result=await response.json()}catch{}
+   if(!response.ok)throw new Error(result.error==='Invalid password.'?'كلمة المرور غير صحيحة.':(result.error||'كلمة المرور غير صحيحة.'));
+   adminPassword=password;
+   $('loginWrap').classList.add('hidden');$('workspace').classList.add('active');$('logoutBtn').style.display='inline-flex';$('saveBtn').style.display='inline-flex';
+   await loadData(false);showNotice('تم تسجيل الدخول.','ok');
+  }catch(error){if(!$('workspace').classList.contains('active'))adminPassword='';showNotice(error.message||'تعذر تسجيل الدخول.','error');}
+  finally{submit.disabled=false;submit.textContent='دخول';}
+ });
+ $('logoutBtn').addEventListener('click',()=>{adminPassword='';data=rawDefault();$('workspace').classList.remove('active');$('loginWrap').classList.remove('hidden');$('logoutBtn').style.display='none';$('saveBtn').style.display='none';$('password').value='';$('repoStatus').textContent='غير متصل';showNotice('تم تسجيل الخروج.','info');});
+ $('addHero').addEventListener('click',addHero);$('addReview').addEventListener('click',addReview);
+ $('uploadWork').addEventListener('click',()=>guarded(uploadWork));
+ $('saveBtn').addEventListener('click',saveData);$('reloadBtn').addEventListener('click',()=>loadData(true));
+ $('addSection').addEventListener('click',()=>{
+  const title=$('newSectionTitle').value.trim(),titleAr=$('newSectionTitleAr').value.trim();
+  if(!title&&!titleAr){showNotice('أدخل اسم القسم بالعربية أو الإنجليزية على الأقل.','error');return;}
+  data.sections.push({id:makeId('section'),title:title||titleAr,titleAr:titleAr||title,order:Number($('newSectionOrder').value)||data.sections.length+1});
+  $('newSectionTitle').value='';$('newSectionTitleAr').value='';$('newSectionOrder').value=String(data.sections.length+1);
+  renderAll();showNotice('تمت إضافة القسم. اضغط «نشر التعديلات» لحفظه.','ok');
+ });
+ syncWorkForm();renderAll();
+})();
+</script></body></html>
