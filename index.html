@@ -436,6 +436,9 @@ body:before{opacity:.13;background-image:radial-gradient(rgba(255,255,255,.4) .7
 @media(prefers-reduced-motion:reduce){.hero-preview-track{animation:none!important;transform:none!important}.work-track{animation:none!important;transform:none!important}}
 
 .info-wrap.anim-paused:before{animation-play-state:paused}
+.work-track{gap:0;padding:0}
+.work-set{display:flex;flex:0 0 auto;gap:16px;padding-right:16px}
+@media(max-width:700px){.work-set{gap:10px;padding-right:10px}}
 </style>
 </head>
 <body>
@@ -670,11 +673,24 @@ initializeLanguage();
     run = run.slice(0, Math.max(7, Math.min(12, run.length)));
     const renderSet = items => items.map(item => {
       const visual = item.thumbnailUrl
-        ? `<img class="marquee-thumb" src="${esc(item.thumbnailUrl)}" alt="" loading="lazy" decoding="async">`
+        ? `<img class="marquee-thumb" src="${esc(item.thumbnailUrl)}" alt="" decoding="async">`
         : `<img class="marquee-thumb" data-poster="${esc(item.videoUrl)}" alt="" decoding="async"${posterCacheGet(item.videoUrl) ? ` src="${posterCacheGet(item.videoUrl)}"` : ''}>`;
       return `<div class="work-marquee-card ${item.orientation==='horizontal'?'horizontal':''}" aria-hidden="true">${visual}</div>`;
     }).join('');
-    track.innerHTML = renderSet(run) + renderSet(run, true);
+    const baseCount = run.length;
+    const marquee = track.parentElement;
+    const build = () => { track.innerHTML = `<div class="work-set">${renderSet(run)}</div><div class="work-set">${renderSet(run)}</div>`; };
+    build();
+    // Seamless loop: one set must be at least as wide as the visible strip, otherwise a blank gap shows when it restarts.
+    const fitLoop = () => {
+      let guard = 0;
+      while (guard++ < 5 && run.length < 64 && track.querySelector('.work-set').getBoundingClientRect().width < marquee.clientWidth) { run = run.concat(run); build(); }
+      // Same speed as before: the duration grows with the number of cards.
+      track.style.animationDuration = `${Math.max(22, Math.min(42, baseCount * 2.8)) * (run.length / baseCount)}s`;
+    };
+    fitLoop();
+    let resizeTimer = 0;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(fitLoop, 250); });
     // First visit only: grab one still frame per unique video, one at a time, when the browser is idle.
     const pending = [...new Set(featuredVideos.filter(i => !i.thumbnailUrl && !posterCacheGet(i.videoUrl)).map(i => i.videoUrl))];
     if (pending.length) {
@@ -687,7 +703,6 @@ initializeLanguage();
         }
       }, { timeout: 4000 });
     }
-    track.style.animationDuration = `${Math.max(22, Math.min(42, run.length * 2.8))}s`;
   }
   function renderHomeReviews(reviews) {
     const root = document.getElementById('homeReviewsContent');
