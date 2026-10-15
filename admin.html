@@ -112,6 +112,24 @@
   await putFile(file,signed.uploadUrl,file.name,signed.contentType||type);
   return signed.mediaUrl;
  }
+ // Grab one frame from the LOCAL video file so every new work gets a real uploaded thumbnail
+ // (the site then never has to download a video just to draw its preview).
+ function captureThumbFromVideo(file){return new Promise(resolve=>{
+  const url=URL.createObjectURL(file),v=document.createElement('video');let finished=false,timer=0;
+  const finish=blob=>{if(finished)return;finished=true;clearTimeout(timer);URL.revokeObjectURL(url);v.removeAttribute('src');try{v.load();}catch(e){}resolve(blob);};
+  timer=setTimeout(()=>finish(null),10000);
+  v.muted=true;v.playsInline=true;v.preload='auto';
+  v.onerror=()=>finish(null);
+  v.onloadeddata=()=>{try{v.currentTime=Math.min(0.5,(v.duration||1)/2);}catch(e){finish(null);}};
+  v.onseeked=()=>{try{
+   const scale=Math.min(1,480/(v.videoWidth||480)),c=document.createElement('canvas');
+   c.width=Math.max(1,Math.round(v.videoWidth*scale));c.height=Math.max(1,Math.round(v.videoHeight*scale));
+   c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+   c.toBlob(b=>finish(b),'image/jpeg',0.8);
+  }catch(e){finish(null);}};
+  v.src=url;
+ });}
+
  function detectOrientation(file){return new Promise(resolve=>{const url=URL.createObjectURL(file);const v=document.createElement('video');let finished=false;const done=o=>{if(finished)return;finished=true;URL.revokeObjectURL(url);resolve(o);};v.preload='metadata';v.muted=true;v.onloadedmetadata=()=>done(v.videoWidth>v.videoHeight?'horizontal':'vertical');v.onerror=()=>done('vertical');setTimeout(()=>done('vertical'),4000);v.src=url;});}
  async function guarded(task){if(busy){showNotice('انتظر حتى ينتهي الرفع الحالي.','error');return;}busy=true;try{await task();}catch(error){showNotice(error.message||'حدث خطأ غير متوقع.','error');}finally{busy=false;}}
 
@@ -213,6 +231,7 @@
     const videoUrl=await uploadToR2(file,'video');
     let thumbnailUrl='';const thumb=$('workThumbFile').files?.[0];
     if(thumb){try{thumbnailUrl=await uploadToR2(thumb,'image');}catch(error){showNotice(`تم رفع الفيديو لكن تعذر رفع الصورة المصغرة: ${error.message}`,'error');}}
+    else{try{const blob=await captureThumbFromVideo(file);if(blob)thumbnailUrl=await uploadToR2(new File([blob],'thumb.jpg',{type:'image/jpeg'}),'image');}catch(error){/* thumbnail is optional */}}
     item={id:makeId('work'),type:'video',storage:'r2',mediaType:'r2',title,sectionId,videoUrl,thumbnailUrl,orientation,visible:true,showOnHome:true};
    }else{
     const imageUrl=await uploadToR2(file,'image');
