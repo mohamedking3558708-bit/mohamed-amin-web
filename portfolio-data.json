@@ -1,20 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T01:43:55.447Z",
-  "heroVideos": [
-    {
-      "id": "hero-mv8sit1p-wcez8",
-      "url": "/api/media/video-96a7eb82-70b1-4b34-9e83-c9814185acb5.mp4",
-      "showDesktop": true,
-      "showMobile": true
-    },
-    {
-      "id": "hero-mv8v7tpt-w3za0",
-      "url": "/api/media/video-02953dce-122d-4a92-b822-4a98078b8e74.mp4",
-      "showDesktop": true,
-      "showMobile": true
-    }
-  ],
+  "updatedAt": "2026-10-15T21:26:44.092Z",
+  "heroVideos": [],
   "sections": [
     {
       "id": "section-mv8tl2p8-4st9c",
