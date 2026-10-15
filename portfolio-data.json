@@ -1,7 +1,26 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T21:26:44.092Z",
-  "heroVideos": [],
+  "updatedAt": "2026-10-15T21:32:50.573Z",
+  "heroVideos": [
+    {
+      "id": "hero-mva1u431-h8g0d",
+      "url": "/api/media/video-9ee89cb9-5714-475f-811e-2c24f0fba091.webm",
+      "showDesktop": true,
+      "showMobile": true
+    },
+    {
+      "id": "hero-mva1uyvy-yih23",
+      "url": "/api/media/video-b406d7da-48a4-423e-8523-e3c0bc6253a1.webm",
+      "showDesktop": true,
+      "showMobile": true
+    },
+    {
+      "id": "hero-mva1v4en-6pzso",
+      "url": "/api/media/video-6f363e60-a695-424d-b32b-80255f1093ca.webm",
+      "showDesktop": false,
+      "showMobile": true
+    }
+  ],
   "sections": [
     {
       "id": "section-mv8tl2p8-4st9c",
