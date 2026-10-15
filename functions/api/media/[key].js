@@ -1,7 +1,8 @@
-// Serves uploaded media from R2 and caches small files at the Cloudflare edge,
-// so repeat views (and range requests) are answered without waking R2 each time.
+// Serves uploaded media from R2.
+// - Small files are kept in Cloudflare's edge cache after the first view, so later plays / loops / seeks never touch R2.
+// - Range requests are always answered with a proper 206, so the browser can seek and keep buffering smoothly.
 
-const EDGE_CACHE_MAX_BYTES = 30 * 1024 * 1024; // larger files are streamed straight from R2 with Range support
+const EDGE_CACHE_MAX_BYTES = 30 * 1024 * 1024;
 
 function response(message, status = 404, headers = {}) {
   return new Response(message, { status, headers: { 'Cache-Control': 'no-store', ...headers } });
@@ -45,48 +46,58 @@ export async function onRequest({ request, env, params, waitUntil }) {
   const key = String(params.key || '');
   if (!/^(?:video|image)-[0-9a-f-]{36}\.[a-z0-9]{1,8}$/i.test(key)) return response('Not found', 404);
 
-  // Edge cache: one entry per file (the key is a UUID, so it never changes). The cache answers Range requests itself.
   const cache = caches.default;
   const url = new URL(request.url);
   const cacheKey = new Request(`${url.origin}${url.pathname}`, { method: 'GET' });
   const rangeHeader = request.headers.get('Range');
+
+  // 1) Edge cache hit: answered by Cloudflare itself (including Range requests -> 206).
   if (request.method === 'GET') {
-    const lookup = rangeHeader ? new Request(cacheKey, { headers: { Range: rangeHeader } }) : cacheKey;
-    const hit = await cache.match(lookup);
+    const hit = await cache.match(rangeHeader ? new Request(cacheKey, { headers: { Range: rangeHeader } }) : cacheKey);
     if (hit) return hit;
   }
 
+  // 2) Miss: read from R2.
   const head = await env.PORTFOLIO_R2.head(key);
   if (!head) return response('Not found', 404);
   const headers = baseHeaders(head);
   headers.set('Content-Length', String(head.size));
+  headers.set('X-Media-Source', 'r2');
   if (request.method === 'HEAD') return new Response(null, { status: 200, headers });
 
-  // Small file, first visit: read it once, store it at the edge, answer with the full file.
-  if (head.size <= EDGE_CACHE_MAX_BYTES) {
-    const object = await env.PORTFOLIO_R2.get(key);
-    if (!object) return response('Not found', 404);
-    const outHeaders = baseHeaders(object);
-    outHeaders.set('Content-Length', String(object.size));
-    const full = new Response(object.body, { status: 200, headers: outHeaders });
-    if (waitUntil) waitUntil(cache.put(cacheKey, full.clone()));
-    return full;
-  }
-
-  // Large file: stream from R2 with Range support (no edge caching).
+  // Fill the edge cache once (only from the first request of a file: no Range, or "bytes=0-").
+  const canCache = head.size <= EDGE_CACHE_MAX_BYTES && (!rangeHeader || /^bytes=0-/.test(rangeHeader.trim()));
   const range = parseRange(rangeHeader, head.size);
   if (range?.invalid) return response('Requested range is not satisfiable.', 416, { 'Content-Range': `bytes */${head.size}`, 'Accept-Ranges': 'bytes' });
+
   if (!range) {
     const object = await env.PORTFOLIO_R2.get(key);
     if (!object) return response('Not found', 404);
     const outHeaders = baseHeaders(object);
     outHeaders.set('Content-Length', String(object.size));
+    outHeaders.set('X-Media-Source', 'r2');
+    if (canCache && waitUntil) {
+      const [forClient, forCache] = object.body.tee();
+      waitUntil(cache.put(cacheKey, new Response(forCache, { status: 200, headers: outHeaders })));
+      return new Response(forClient, { status: 200, headers: outHeaders });
+    }
     return new Response(object.body, { status: 200, headers: outHeaders });
+  }
+
+  if (canCache && waitUntil) {
+    waitUntil((async () => {
+      const full = await env.PORTFOLIO_R2.get(key);
+      if (!full) return;
+      const fullHeaders = baseHeaders(full);
+      fullHeaders.set('Content-Length', String(full.size));
+      await cache.put(cacheKey, new Response(full.body, { status: 200, headers: fullHeaders }));
+    })());
   }
   const object = await env.PORTFOLIO_R2.get(key, { range: { offset: range.start, length: range.length } });
   if (!object) return response('Not found', 404);
   const outHeaders = baseHeaders(object);
   outHeaders.set('Content-Length', String(range.length));
   outHeaders.set('Content-Range', `bytes ${range.start}-${range.end}/${head.size}`);
+  outHeaders.set('X-Media-Source', 'r2');
   return new Response(object.body, { status: 206, headers: outHeaders });
 }
