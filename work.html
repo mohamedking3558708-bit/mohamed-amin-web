@@ -140,14 +140,11 @@
         } catch (e) { finish(''); }
       };
       timer = setTimeout(() => finish(''), 9000);
-      v.muted = true; v.playsInline = true; v.preload = 'auto';
-      v.addEventListener('loadeddata', () => {
-        try { v.currentTime = 0.1; } catch (e) { draw(); return; }
-        setTimeout(() => { if (!done) draw(); }, 2500);
-      });
+      v.muted = true; v.playsInline = true; v.preload = 'metadata';
+      v.addEventListener('loadeddata', () => setTimeout(() => { if (!done) draw(); }, 150));
       v.addEventListener('seeked', draw);
       v.addEventListener('error', () => finish(''));
-      v.src = url;
+      v.src = url + '#t=0.1'; // only the first bytes are fetched, not the whole video
     });
   }
   // Frames are captured one at a time, so at most one preview decoder exists at any moment.
