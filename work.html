@@ -107,6 +107,7 @@
   const uncat=visible.filter(item=>!sections.some(s=>String(s.id)===String(item.sectionId||'')));
   if(uncat.length)markup+=block(ar?'أعمال أخرى':'Other Work',uncat);
   root.innerHTML=markup||`<div class="empty">${ar?'لا توجد أعمال منشورة بعد. ستظهر الأعمال هنا عند إضافتها من لوحة التحكم.':'No portfolio items have been published yet. Add work using the admin panel and it will appear here.'}</div>`;
+  lazyPosters(root);
   root.querySelectorAll('[data-item-id]').forEach(el=>{
    const open=()=>{const item=visible.find(x=>String(x.id)===el.dataset.itemId);if(item)openItem(item)};
    el.addEventListener('click',open);
@@ -114,15 +115,84 @@
   });
   if(location.hash){const key=decodeURIComponent(location.hash.slice(1));const item=visible.find(x=>String(x.id)===key);if(item)setTimeout(()=>openItem(item),250);}
  }
+
+  // ---- Light previews: one still frame per video, cached in the browser (no <video> elements for previews) ----
+  const POSTER_PREFIX = 'ma-poster:';
+  const posterCacheGet = url => { try { return localStorage.getItem(POSTER_PREFIX + url) || ''; } catch (e) { return ''; } };
+  const posterCacheSet = (url, data) => { try { localStorage.setItem(POSTER_PREFIX + url, data); } catch (e) {} };
+  let posterChain = Promise.resolve('');
+  function capturePoster(url) {
+    return new Promise(resolve => {
+      const v = document.createElement('video');
+      let done = false, timer = 0;
+      const finish = value => {
+        if (done) return; done = true; clearTimeout(timer);
+        v.removeAttribute('src'); v.load();
+        if (value) posterCacheSet(url, value);
+        resolve(value);
+      };
+      const draw = () => {
+        try {
+          const w = 360, h = Math.round(w * (v.videoHeight / v.videoWidth)) || 640;
+          const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(v, 0, 0, w, h);
+          finish(canvas.toDataURL('image/jpeg', 0.75));
+        } catch (e) { finish(''); }
+      };
+      timer = setTimeout(() => finish(''), 9000);
+      v.muted = true; v.playsInline = true; v.preload = 'auto';
+      v.addEventListener('loadeddata', () => {
+        try { v.currentTime = 0.1; } catch (e) { draw(); return; }
+        setTimeout(() => { if (!done) draw(); }, 2500);
+      });
+      v.addEventListener('seeked', draw);
+      v.addEventListener('error', () => finish(''));
+      v.src = url;
+    });
+  }
+  // Frames are captured one at a time, so at most one preview decoder exists at any moment.
+  function getPoster(url) {
+    const cached = posterCacheGet(url);
+    if (cached) return Promise.resolve(cached);
+    const job = posterChain.then(() => capturePoster(url));
+    posterChain = job.catch(() => '');
+    return job;
+  }
+
+ // Cards without a thumbnail show a cached still frame; the frame is captured only when the card nears the screen.
+ function lazyPosters(root){
+  const imgs=[...root.querySelectorAll('img[data-poster]')].filter(img=>!img.getAttribute('src'));
+  if(!imgs.length)return;
+  const load=img=>getPoster(img.dataset.poster).then(p=>{if(p)img.src=p});
+  if(!('IntersectionObserver' in window)){imgs.forEach(load);return;}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);load(e.target)}}),{rootMargin:'300px'});
+  imgs.forEach(img=>io.observe(img));
+ }
  function card(item){
   if(item.type==='image'){
    return `<article class="photo-card" data-item-id="${esc(item.id)}" role="button" tabindex="0"><img src="${esc(item.imageUrl)}" alt="${esc(item.title)}" loading="lazy"><h3>${esc(item.title||'')}</h3></article>`;
   }
-  const visual=item.thumbnailUrl?`<img src="${esc(item.thumbnailUrl)}" alt="${esc(item.title)}" loading="lazy">`:`<video src="${esc(item.videoUrl)}#t=0.1" muted playsinline preload="metadata" aria-hidden="true"></video>`;
+  const visual=item.thumbnailUrl?`<img src="${esc(item.thumbnailUrl)}" alt="${esc(item.title)}" loading="lazy">`:`<img data-poster="${esc(item.videoUrl)}" alt="${esc(item.title)}" decoding="async"${posterCacheGet(item.videoUrl)?` src="${posterCacheGet(item.videoUrl)}"`:''}>`;
   return `<article class="work-card ${item.orientation==='horizontal'?'horizontal':''}" data-item-id="${esc(item.id)}" role="button" tabindex="0"><div class="work-card-image">${visual}<span class="play-button" aria-hidden="true">▶</span></div><div class="card-meta"><h3>${esc(item.title||'')}</h3></div></article>`;
  }
- function setLang(lang){const ar=lang==='ar';document.documentElement.lang=lang;document.documentElement.dir=ar?'rtl':'ltr';document.body.classList.toggle('arabic',ar);document.querySelectorAll('[data-en][data-ar]').forEach(el=>el.innerHTML=ar?el.dataset.ar:el.dataset.en);document.getElementById('langToggle').textContent=ar?'English':'العربية';try{localStorage.setItem('mohamedAminLanguagePreference',lang)}catch{}}
- async function init(){document.getElementById('year').textContent=new Date().getFullYear();let lang='en';try{lang=localStorage.getItem('mohamedAminLanguagePreference')||''}catch{}if(!['ar','en'].includes(lang)){try{const r=await fetch('https://ipapi.co/json/',{cache:'no-store'});const loc=await r.json();lang=arabicCodes.has(String(loc.country_code||'').toUpperCase())?'ar':'en'}catch{lang=(navigator.language||'').startsWith('ar')?'ar':'en'}}setLang(lang);document.getElementById('langToggle').addEventListener('click',()=>setLang(document.documentElement.lang==='en'?'ar':'en'));let data={sections:[],items:[]};try{const r=await fetch(`portfolio-data.json?v=${Date.now()}`,{cache:'no-store'});if(r.ok)data=await r.json()}catch{}render({...{sections:[],items:[]},...data});}
+ function setLang(lang,persist=true){const ar=lang==='ar';document.documentElement.lang=lang;document.documentElement.dir=ar?'rtl':'ltr';document.body.classList.toggle('arabic',ar);document.querySelectorAll('[data-en][data-ar]').forEach(el=>el.innerHTML=ar?el.dataset.ar:el.dataset.en);document.getElementById('langToggle').textContent=ar?'English':'العربية';if(persist){try{localStorage.setItem('mohamedAminLanguagePreference',lang)}catch{}}}
+ async function init(){
+  document.getElementById('year').textContent=new Date().getFullYear();
+  const geoKey='mohamedAminGeoLanguage';
+  let saved='',geo='';try{saved=localStorage.getItem('mohamedAminLanguagePreference')||'';geo=localStorage.getItem(geoKey)||''}catch{}
+  const hasSaved=['ar','en'].includes(saved),hasGeo=['ar','en'].includes(geo);
+  const browserLang=(navigator.languages||[navigator.language||'']).some(l=>/^ar(?:-|$)/i.test(l))?'ar':'en';
+  setLang(hasSaved?saved:(hasGeo?geo:browserLang),false);
+  let touched=false;
+  document.getElementById('langToggle').addEventListener('click',()=>{touched=true;setLang(document.documentElement.lang==='en'?'ar':'en')});
+  let data={sections:[],items:[]};
+  const draw=()=>render({...{sections:[],items:[]},...data});
+  try{const r=await fetch(`portfolio-data.json?v=${Date.now()}`,{cache:'no-store'});if(r.ok)data=await r.json()}catch{}
+  draw();
+  if(!hasSaved&&!hasGeo){
+   try{const ac=new AbortController();const t=setTimeout(()=>ac.abort(),2500);const r=await fetch('https://ipapi.co/json/',{cache:'no-store',signal:ac.signal});clearTimeout(t);const loc=await r.json();const lang=arabicCodes.has(String(loc.country_code||'').toUpperCase())?'ar':'en';try{localStorage.setItem(geoKey,lang)}catch{}if(!touched&&document.documentElement.lang!==lang){setLang(lang,false);draw()}}catch{}
+  }
+ }
  init();
 })();
 </script></body></html>
