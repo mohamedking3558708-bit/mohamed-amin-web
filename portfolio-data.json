@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T21:33:59.246Z",
+  "updatedAt": "2026-10-16T22:09:17.108Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -109,5 +109,56 @@
       "showOnHome": true
     }
   ],
-  "reviews": []
+  "reviews": [
+    {
+      "id": "review-mvbik1nj-qhj5j",
+      "mode": "image",
+      "clientName": "",
+      "content": "",
+      "detail": "",
+      "imageUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-234c3153-41cd-400b-8cc8-60a5a2e0def9.jpg",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "review-mvbimypu-bbata",
+      "mode": "image",
+      "clientName": "",
+      "content": "",
+      "detail": "",
+      "imageUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-90c1b79e-5749-41b4-9a29-d881a6572b33.jpg",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "review-mvbio7ys-g0mcd",
+      "mode": "image",
+      "clientName": "",
+      "content": "",
+      "detail": "",
+      "imageUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-353e2663-3a0e-4698-bfb8-35b8d27f49b9.jpg",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "review-mvbio9h3-teav1",
+      "mode": "image",
+      "clientName": "",
+      "content": "",
+      "detail": "",
+      "imageUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-efd36f88-fe31-446f-9d37-b21c3b5baca0.jpg",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "review-mvbiqnpx-w7xfs",
+      "mode": "text",
+      "clientName": "",
+      "content": "",
+      "detail": "",
+      "imageUrl": "",
+      "label": "",
+      "visible": true
+    }
+  ]
 }
