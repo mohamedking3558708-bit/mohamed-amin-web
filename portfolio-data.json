@@ -1,11 +1,23 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T20:22:29.092Z",
+  "updatedAt": "2026-10-16T20:25:23.820Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
       "url": "/api/media/video-ba0bdfc9-972f-45ce-a85d-4385e9b8a6ba.mp4",
       "showDesktop": true,
+      "showMobile": true
+    },
+    {
+      "id": "hero-mvbf0i9r-k2gab",
+      "url": "/api/media/video-008d91d1-0304-460e-862d-374b1ec3bfcf.mp4",
+      "showDesktop": true,
+      "showMobile": true
+    },
+    {
+      "id": "hero-mvbf0joj-0ocwf",
+      "url": "/api/media/video-8366ade4-6953-4ff3-9d6b-abcf7394ceea.mp4",
+      "showDesktop": false,
       "showMobile": true
     }
   ],
