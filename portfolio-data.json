@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T21:24:46.811Z",
+  "updatedAt": "2026-10-16T21:27:47.932Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -59,13 +59,26 @@
     {
       "id": "work-mvbh7e3e-y8sac",
       "type": "video",
-      "title": "3",
+      "title": "ريلز شركة البرهان للمحاماه",
       "sectionId": "section-mv8tl2p8-4st9c",
       "visible": true,
       "storage": "bunny",
       "mediaType": "bunny",
       "videoUrl": "/api/media/video-237922fd-d352-4cc1-9f63-d1f0aae71953.mp4",
       "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-e6a6cb9c-8ff7-442c-ae8f-3a0eac600487.jpg",
+      "orientation": "vertical",
+      "showOnHome": true
+    },
+    {
+      "id": "work-mvbhb9ub-xczk4",
+      "type": "video",
+      "title": "اعلان عن فترة دراسية",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "bunny",
+      "mediaType": "bunny",
+      "videoUrl": "/api/media/video-3411b7f8-2778-4af1-8e9e-46fa55fe89d6.mp4",
+      "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-b536ddbb-c91c-4d2b-b044-c4b91de3d817.jpg",
       "orientation": "vertical",
       "showOnHome": true
     }
