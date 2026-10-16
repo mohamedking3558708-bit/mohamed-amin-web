@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T21:21:38.237Z",
+  "updatedAt": "2026-10-16T21:24:46.811Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -53,6 +53,19 @@
       "mediaType": "bunny",
       "videoUrl": "/api/media/video-ba9f8ab3-8cf0-4bbe-a453-ea20a63ce018.mp4",
       "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-99556976-bbc2-41e5-a737-f4e5993e439d.jpg",
+      "orientation": "vertical",
+      "showOnHome": true
+    },
+    {
+      "id": "work-mvbh7e3e-y8sac",
+      "type": "video",
+      "title": "3",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "bunny",
+      "mediaType": "bunny",
+      "videoUrl": "/api/media/video-237922fd-d352-4cc1-9f63-d1f0aae71953.mp4",
+      "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-e6a6cb9c-8ff7-442c-ae8f-3a0eac600487.jpg",
       "orientation": "vertical",
       "showOnHome": true
     }
