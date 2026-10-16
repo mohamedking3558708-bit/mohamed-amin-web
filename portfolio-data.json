@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T21:32:04.900Z",
+  "updatedAt": "2026-10-16T21:33:59.246Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -92,6 +92,19 @@
       "mediaType": "bunny",
       "videoUrl": "/api/media/video-4acf46be-7cf5-4394-988f-4efcdae75561.mp4",
       "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-ef991d8c-cf26-4de7-b156-d6de4d74d04d.jpg",
+      "orientation": "vertical",
+      "showOnHome": true
+    },
+    {
+      "id": "work-mvbhj8cx-ih01c",
+      "type": "video",
+      "title": "ريلز المدرس بابا عبده",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "bunny",
+      "mediaType": "bunny",
+      "videoUrl": "/api/media/video-cdec9e4a-fe57-4c9b-b9a8-4d3b2793c31a.mp4",
+      "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-31fccbef-770e-4fa4-ae13-55ea4f401ea2.jpg",
       "orientation": "vertical",
       "showOnHome": true
     }
