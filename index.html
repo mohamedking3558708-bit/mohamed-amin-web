@@ -496,13 +496,15 @@ body:before{opacity:.13;background-image:radial-gradient(rgba(255,255,255,.4) .7
     font-size: 16px !important;
   }
 
-  /* Tilt and lift the middle card so it visually matches the outer cards. */
-  .hero-stage .video-card.mobile-video,
-  .hero-stage .video-card.mobile-video:hover {
-    transform: translateY(-3px) perspective(650px) rotateY(8deg) rotateZ(-3deg) !important;
-    transform-origin: center center;
+
+  /* Keep the middle phone video straight and aligned with the side videos. */
+  @media (max-width: 600px), (max-height: 500px) and (pointer: coarse) {
+    .hero-stage .video-card.mobile-video,
+    .hero-stage .video-card.mobile-video:hover {
+      transform: translateY(-3px) !important;
+      transform-origin: center center;
+    }
   }
-}
 
 </style>
 </head>
