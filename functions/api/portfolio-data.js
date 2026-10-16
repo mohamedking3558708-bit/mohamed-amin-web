@@ -1,6 +1,6 @@
-// Admin-only endpoint: reads and writes portfolio-data.json in the GitHub repo.
-// The GitHub token never reaches the browser: it lives in the Cloudflare secret GITHUB_TOKEN.
-// Auth is the same admin password already used by /api/admin-auth and /api/r2-presign.
+// Admin-only endpoint: reads and writes portfolio-data.json in the GitHub repository.
+// GITHUB_TOKEN and ADMIN_UPLOAD_PASSWORD must remain Cloudflare secrets.
+// Videos are Bunny Stream aliases under /api/media/video-<guid>.mp4; uploaded images use GitHub raw URLs.
 
 const OWNER = 'mohamedking3558708-bit';
 const REPO = 'mohamed-amin-web';
@@ -14,6 +14,9 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+const VIDEO_MEDIA_RE = /^\/api\/media\/video-[0-9a-f-]{36}\.[a-z0-9]{1,8}$/i;
+const LEGACY_IMAGE_MEDIA_RE = /^\/api\/media\/image-[0-9a-f-]{36}\.[a-z0-9]{1,8}$/i;
+const IMAGE_FILE_RE = /^image-[0-9a-f-]{36}\.(?:jpg|jpeg|png|webp|gif|avif)$/i;
 
 async function sha256(value) {
   return new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value)));
@@ -46,7 +49,6 @@ function bytesFromBase64(value) {
   return bytes;
 }
 
-// ---------- GitHub ----------
 function ghUrl(env, path) {
   const owner = env.GITHUB_OWNER || OWNER;
   const repo = env.GITHUB_REPO || REPO;
@@ -55,8 +57,8 @@ function ghUrl(env, path) {
 
 function ghHeaders(env, extra = {}) {
   return {
-    'Accept': 'application/vnd.github+json',
-    'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
+    Accept: 'application/vnd.github+json',
+    Authorization: `Bearer ${env.GITHUB_TOKEN}`,
     'X-GitHub-Api-Version': '2022-11-28',
     'User-Agent': 'mohamed-amin-portfolio-admin',
     ...extra,
@@ -65,14 +67,15 @@ function ghHeaders(env, extra = {}) {
 
 function ghError(response, fallback) {
   if (response.status === 401) return 'سر GITHUB_TOKEN في Cloudflare غير صالح أو منتهي.';
-  if (response.status === 403) return 'سر GITHUB_TOKEN لا يملك صلاحية كافية (يلزم Contents: Read and write) أو تم تجاوز الحد.';
-  if (response.status === 404) return 'تعذر الوصول إلى المستودع من خلال GITHUB_TOKEN. تأكد من صلاحية الوصول للمستودع.';
+  if (response.status === 403) return 'سر GITHUB_TOKEN لا يملك صلاحية Contents: Read and write أو تم تجاوز الحد.';
+  if (response.status === 404) return 'تعذر الوصول إلى المستودع باستخدام GITHUB_TOKEN. تحقق من صلاحياته.';
   return `${fallback} (${response.status})`;
 }
 
 async function readFile(env) {
   const branch = env.GITHUB_BRANCH || BRANCH;
-  const response = await fetch(`${ghUrl(env, FILE_PATH)}?ref=${encodeURIComponent(branch)}`, { headers: ghHeaders(env) });
+  const apiUrl = `${ghUrl(env, FILE_PATH)}?ref=${encodeURIComponent(branch)}`;
+  const response = await fetch(apiUrl, { headers: ghHeaders(env) });
   if (response.status === 404) return { sha: null, data: null };
   if (!response.ok) throw Object.assign(new Error(ghError(response, 'تعذر قراءة ملف البيانات')), { status: 502 });
   const file = await response.json();
@@ -80,9 +83,7 @@ async function readFile(env) {
   if (file.encoding === 'base64' && file.content) {
     text = decoder.decode(bytesFromBase64(file.content));
   } else {
-    const raw = await fetch(`${ghUrl(env, FILE_PATH)}?ref=${encodeURIComponent(branch)}`, {
-      headers: ghHeaders(env, { 'Accept': 'application/vnd.github.raw+json' }),
-    });
+    const raw = await fetch(apiUrl, { headers: ghHeaders(env, { Accept: 'application/vnd.github.raw+json' }) });
     if (!raw.ok) throw Object.assign(new Error(ghError(raw, 'تعذر قراءة ملف البيانات')), { status: 502 });
     text = await raw.text();
   }
@@ -110,32 +111,46 @@ async function saveFile(env, data) {
   let { sha } = await readFile(env);
   let response = await writeFile(env, data, sha);
   if (response.status === 409 || response.status === 422) {
-    // The file changed between our read and write: re-read the SHA once and retry.
     ({ sha } = await readFile(env));
     response = await writeFile(env, data, sha);
   }
   if (!response.ok) throw Object.assign(new Error(ghError(response, 'تعذر نشر التعديلات')), { status: 502 });
 }
 
-// ---------- Validation: only device uploads (R2) are accepted, no external links ----------
-const MEDIA_RE = /^\/api\/media\/(?:video|image)-[0-9a-f-]{36}\.[a-z0-9]{1,8}$/i;
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
 const str = (value, max = 2000) => String(value ?? '').slice(0, max);
 const bool = (value, fallback = true) => (typeof value === 'boolean' ? value : fallback);
-const mediaUrl = (value, label, required = false) => {
-  const url = String(value ?? '').trim();
-  if (!url) { if (required) fail(`${label} مطلوب.`); return ''; }
-  if (!MEDIA_RE.test(url)) fail(`${label} يجب أن يكون ملفًا مرفوعًا من الجهاز (لا روابط خارجية).`);
-  return url;
-};
 
-function normalize(input) {
+function validUploadedImageUrl(value, env) {
+  let url;
+  try { url = new URL(value); } catch { return false; }
+  if (url.protocol !== 'https:' || url.hostname !== 'raw.githubusercontent.com' || url.search || url.hash) return false;
+  const owner = String(env.GITHUB_OWNER || OWNER);
+  const repo = String(env.GITHUB_REPO || REPO);
+  const branch = String(env.GITHUB_BRANCH || BRANCH);
+  const allowedPrefix = `/${owner}/${repo}/${branch}/uploads/images/`;
+  if (!url.pathname.startsWith(allowedPrefix)) return false;
+  return IMAGE_FILE_RE.test(url.pathname.slice(allowedPrefix.length));
+}
+
+function mediaUrl(value, label, kind, required, env) {
+  const url = String(value ?? '').trim();
+  if (!url) {
+    if (required) fail(`${label} مطلوب.`);
+    return '';
+  }
+  if (kind === 'video' && VIDEO_MEDIA_RE.test(url)) return url;
+  if (kind === 'image' && (LEGACY_IMAGE_MEDIA_RE.test(url) || validUploadedImageUrl(url, env))) return url;
+  fail(`${label} يجب أن يكون ملفًا مرفوعًا من لوحة التحكم.`);
+}
+
+function normalize(input, env) {
   if (!input || typeof input !== 'object') fail('بيانات غير صالحة.');
   const list = value => (Array.isArray(value) ? value : []);
 
   const heroVideos = list(input.heroVideos).map((v, i) => ({
     id: str(v?.id, 80) || `hero-${i + 1}`,
-    url: mediaUrl(v?.url, `فيديو الهيرو رقم ${i + 1}`, true),
+    url: mediaUrl(v?.url, `فيديو الهيرو رقم ${i + 1}`, 'video', true, env),
     showDesktop: bool(v?.showDesktop),
     showMobile: bool(v?.showMobile),
   }));
@@ -145,8 +160,8 @@ function normalize(input) {
 
   const sections = list(input.sections).map((s, i) => ({
     id: str(s?.id, 80),
-    title: str(s?.title, 120) || str(s?.titleAr, 120),
-    titleAr: str(s?.titleAr, 120) || str(s?.title, 120),
+    title: str(s?.title, 120).trim() || str(s?.titleAr, 120).trim(),
+    titleAr: str(s?.titleAr, 120).trim() || str(s?.title, 120).trim(),
     order: Number.isFinite(Number(s?.order)) ? Number(s.order) : i + 1,
   }));
   sections.forEach((s, i) => {
@@ -169,14 +184,18 @@ function normalize(input) {
       visible: bool(item?.visible),
     };
     if (type === 'image') {
-      return { ...base, imageUrl: mediaUrl(item?.imageUrl, `صورة العمل رقم ${n}`, true), description: str(item?.description, 5000) };
+      return {
+        ...base,
+        imageUrl: mediaUrl(item?.imageUrl, `صورة العمل رقم ${n}`, 'image', true, env),
+        description: str(item?.description, 5000),
+      };
     }
     return {
       ...base,
-      storage: 'r2',
-      mediaType: 'r2',
-      videoUrl: mediaUrl(item?.videoUrl, `فيديو العمل رقم ${n}`, true),
-      thumbnailUrl: mediaUrl(item?.thumbnailUrl, `الصورة المصغرة للعمل رقم ${n}`),
+      storage: 'bunny',
+      mediaType: 'bunny',
+      videoUrl: mediaUrl(item?.videoUrl, `فيديو العمل رقم ${n}`, 'video', true, env),
+      thumbnailUrl: mediaUrl(item?.thumbnailUrl, `الصورة المصغرة للعمل رقم ${n}`, 'image', true, env),
       orientation: item?.orientation === 'horizontal' ? 'horizontal' : 'vertical',
       showOnHome: bool(item?.showOnHome),
     };
@@ -188,7 +207,7 @@ function normalize(input) {
     clientName: str(r?.clientName, 200),
     content: str(r?.content, 5000),
     detail: str(r?.detail, 5000),
-    imageUrl: mediaUrl(r?.imageUrl, `صورة رأي العميل رقم ${i + 1}`),
+    imageUrl: mediaUrl(r?.imageUrl, `صورة رأي العميل رقم ${i + 1}`, 'image', false, env),
     label: str(r?.label, 200),
     visible: bool(r?.visible),
   }));
@@ -208,14 +227,13 @@ export async function onRequestPost({ request, env }) {
 
   let body;
   try { body = await request.json(); } catch { return json({ error: 'طلب غير صالح.' }, 400); }
-
   try {
     if (body.action === 'load') {
       const { data } = await readFile(env);
       return json({ data: data || emptyData(), exists: Boolean(data) });
     }
     if (body.action === 'save') {
-      const clean = normalize(body.data);
+      const clean = normalize(body.data, env);
       await saveFile(env, clean);
       return json({ ok: true, updatedAt: clean.updatedAt });
     }
