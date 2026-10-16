@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T21:19:04.631Z",
+  "updatedAt": "2026-10-16T21:21:38.237Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -40,6 +40,19 @@
       "mediaType": "bunny",
       "videoUrl": "/api/media/video-2b4bd02a-2c17-4bcb-95c6-5edd71448b3d.mp4",
       "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-2a56f16a-7777-458f-843d-e7ba39aaeac3.jpg",
+      "orientation": "vertical",
+      "showOnHome": true
+    },
+    {
+      "id": "work-mvbh3cky-wrnxd",
+      "type": "video",
+      "title": "اعلان تطبيق البرهان",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "bunny",
+      "mediaType": "bunny",
+      "videoUrl": "/api/media/video-ba9f8ab3-8cf0-4bbe-a453-ea20a63ce018.mp4",
+      "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-99556976-bbc2-41e5-a737-f4e5993e439d.jpg",
       "orientation": "vertical",
       "showOnHome": true
     }
