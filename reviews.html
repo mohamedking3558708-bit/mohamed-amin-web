@@ -34,26 +34,203 @@ nav{height:78px;display:flex;align-items:center;justify-content:space-between;bo
 </div>
 <div id="reviewModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true"><div class="modal-box"><button class="close" type="button" aria-label="Close">×</button><img class="modal-image" alt="" hidden><div class="modal-details"><h2></h2><p></p></div></div></div>
 <script>
-(()=>{
- const $=s=>document.querySelector(s);
- const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const arabicCountries=new Set(['DZ','BH','KM','DJ','EG','IQ','JO','KW','LB','LY','MR','MA','OM','PS','QA','SA','SO','SD','SY','TN','AE','YE']);
- const languageKey='mohamedAminLanguagePreference';
- function setLanguage(lang,persist=true){const ar=lang==='ar';document.documentElement.lang=lang;document.documentElement.dir=ar?'rtl':'ltr';document.body.classList.toggle('arabic',ar);document.querySelectorAll('[data-en][data-ar]').forEach(el=>el.innerHTML=ar?el.dataset.ar:el.dataset.en);$('#langToggle').textContent=ar?'English':'العربية';if(persist){try{localStorage.setItem(languageKey,lang)}catch{}}}
- let reviewsData={reviews:[]};
- async function initialLanguage(){
-  const geoKey='mohamedAminGeoLanguage';
-  let saved='',geo='';try{saved=localStorage.getItem(languageKey)||'';geo=localStorage.getItem(geoKey)||''}catch{}
-  const hasSaved=['ar','en'].includes(saved),hasGeo=['ar','en'].includes(geo);
-  const browserLang=(navigator.languages||[navigator.language||'']).some(l=>/^ar(?:-|$)/i.test(l))?'ar':'en';
-  setLanguage(hasSaved?saved:(hasGeo?geo:browserLang),false);
-  if(hasSaved||hasGeo)return;
-  let touched=false;$('#langToggle').addEventListener('click',()=>{touched=true},{once:true});
-  try{const ac=new AbortController();const t=setTimeout(()=>ac.abort(),2500);const response=await fetch('https://ipapi.co/json/',{cache:'no-store',signal:ac.signal});clearTimeout(t);const geoData=await response.json();const lang=arabicCountries.has(String(geoData.country_code||'').toUpperCase())?'ar':'en';try{localStorage.setItem(geoKey,lang)}catch{}if(!touched&&document.documentElement.lang!==lang){setLanguage(lang,false);render(reviewsData)}}catch{}
- }
- async function init(){initialLanguage();$('#year').textContent=new Date().getFullYear();try{const response=await fetch(`portfolio-data.json?v=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error('No data');const data=await response.json();reviewsData=data;render(data)}catch{render({reviews:[]})}}
- $('#langToggle').addEventListener('click',()=>setLanguage(document.documentElement.lang==='en'?'ar':'en'));
- init();
+(() => {
+  const $ = selector => document.querySelector(selector);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+
+  const languageKey = 'mohamedAminLanguagePreference';
+  const geoKey = 'mohamedAminGeoLanguage';
+  const arabicCountries = new Set([
+    'DZ', 'BH', 'KM', 'DJ', 'EG', 'IQ', 'JO', 'KW', 'LB', 'LY', 'MR',
+    'MA', 'OM', 'PS', 'QA', 'SA', 'SO', 'SD', 'SY', 'TN', 'AE', 'YE'
+  ]);
+
+  let reviewsData = { reviews: [] };
+  let visibleImageReviews = [];
+
+  const localText = (en, ar) => document.documentElement.lang === 'ar' ? ar : en;
+
+  function setLanguage(language, persist = true) {
+    const isArabic = language === 'ar';
+    document.documentElement.lang = language;
+    document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+    document.body.classList.toggle('arabic', isArabic);
+
+    document.querySelectorAll('[data-en][data-ar]').forEach(element => {
+      element.innerHTML = isArabic ? element.dataset.ar : element.dataset.en;
+    });
+
+    const languageButton = $('#langToggle');
+    if (languageButton) languageButton.textContent = isArabic ? 'English' : 'العربية';
+
+    if (persist) {
+      try { localStorage.setItem(languageKey, language); } catch (_) {}
+    }
+  }
+
+  function render(data = {}) {
+    const allReviews = Array.isArray(data.reviews)
+      ? data.reviews.filter(review => review && review.visible !== false)
+      : [];
+
+    visibleImageReviews = allReviews.filter(review =>
+      review.mode === 'image' && typeof review.imageUrl === 'string' && review.imageUrl.trim()
+    );
+
+    const writtenReviews = allReviews.filter(review =>
+      review.mode !== 'image' && String(review.content || review.detail || '').trim()
+    );
+
+    const gallery = $('#imageReviews');
+    if (gallery) {
+      if (visibleImageReviews.length) {
+        gallery.innerHTML = visibleImageReviews.map((review, index) => {
+          const label = review.clientName || review.label || localText('Client review', 'رأي عميل');
+          return `
+            <button class="review-tile" type="button" data-image-index="${index}"
+              aria-label="${esc(localText('Open review: ', 'افتح رأي العميل: ') + label)}">
+              <img src="${esc(review.imageUrl)}" alt="${esc(label)}" loading="lazy" decoding="async">
+              <span class="tile-open-label">${esc(localText('Open review', 'عرض رأي العميل'))}</span>
+            </button>`;
+        }).join('');
+      } else {
+        gallery.innerHTML = `<div class="gallery-empty">${esc(localText(
+          'No image reviews have been added yet.',
+          'لم تتم إضافة صور لآراء العملاء بعد.'
+        ))}</div>`;
+      }
+    }
+
+    const textSection = $('#textReviewSection');
+    const textRoot = $('#textReviews');
+    if (textSection && textRoot) {
+      textSection.hidden = writtenReviews.length === 0;
+      textRoot.innerHTML = writtenReviews.map(review => {
+        const name = review.clientName || localText('Client', 'عميل');
+        const content = review.content || review.detail || '';
+        return `
+          <article class="quote-card">
+            <div class="quote-mark" aria-hidden="true">“</div>
+            <h3>${esc(name)}</h3>
+            <p>${esc(content)}</p>
+          </article>`;
+      }).join('');
+    }
+  }
+
+  function openReview(review) {
+    const modal = $('#reviewModal');
+    if (!modal || !review) return;
+
+    const image = modal.querySelector('.modal-image');
+    const title = modal.querySelector('.modal-details h2');
+    const detail = modal.querySelector('.modal-details p');
+
+    image.src = review.imageUrl;
+    image.alt = review.clientName || review.label || localText('Client review', 'رأي عميل');
+    image.hidden = false;
+    title.textContent = review.clientName || review.label || localText('Client review', 'رأي عميل');
+    detail.textContent = review.detail || review.content || '';
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    const modal = $('#reviewModal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    const image = modal.querySelector('.modal-image');
+    image.removeAttribute('src');
+    image.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  async function initialLanguage() {
+    let saved = '';
+    let geo = '';
+    try {
+      saved = localStorage.getItem(languageKey) || '';
+      geo = localStorage.getItem(geoKey) || '';
+    } catch (_) {}
+
+    const browserLanguage = (navigator.languages || [navigator.language || ''])
+      .some(language => /^ar(?:-|$)/i.test(language)) ? 'ar' : 'en';
+    const hasSaved = ['ar', 'en'].includes(saved);
+    const hasGeo = ['ar', 'en'].includes(geo);
+    setLanguage(hasSaved ? saved : (hasGeo ? geo : browserLanguage), false);
+    if (hasSaved || hasGeo) return;
+
+    let userChangedLanguage = false;
+    const languageButton = $('#langToggle');
+    languageButton?.addEventListener('click', () => { userChangedLanguage = true; }, { once: true });
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    try {
+      const response = await fetch('https://ipapi.co/json/', {
+        cache: 'no-store',
+        signal: controller.signal
+      });
+      if (!response.ok) return;
+      const locationData = await response.json();
+      const countryCode = String(locationData.country_code || '').toUpperCase();
+      const language = arabicCountries.has(countryCode) ? 'ar' : 'en';
+      try { localStorage.setItem(geoKey, language); } catch (_) {}
+
+      if (!userChangedLanguage && document.documentElement.lang !== language) {
+        setLanguage(language, false);
+        render(reviewsData);
+      }
+    } catch (_) {
+      // If location lookup is unavailable, keep the browser or saved language.
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  async function init() {
+    $('#year').textContent = new Date().getFullYear();
+    void initialLanguage();
+
+    try {
+      const response = await fetch(`portfolio-data.json?v=${Date.now()}`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Could not load portfolio-data.json (${response.status}).`);
+      const data = await response.json();
+      reviewsData = data && typeof data === 'object' ? data : { reviews: [] };
+      render(reviewsData);
+    } catch (error) {
+      console.error('Failed to load client reviews:', error);
+      reviewsData = { reviews: [] };
+      render(reviewsData); // Always remove the loading message, even when the data file fails.
+    }
+  }
+
+  $('#imageReviews')?.addEventListener('click', event => {
+    const tile = event.target.closest('[data-image-index]');
+    if (!tile) return;
+    const index = Number(tile.dataset.imageIndex);
+    if (Number.isInteger(index)) openReview(visibleImageReviews[index]);
+  });
+
+  $('#reviewModal')?.querySelector('.close')?.addEventListener('click', closeModal);
+  $('#reviewModal')?.addEventListener('click', event => {
+    if (event.target === $('#reviewModal')) closeModal();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeModal();
+  });
+
+  $('#langToggle')?.addEventListener('click', () => {
+    setLanguage(document.documentElement.lang === 'en' ? 'ar' : 'en');
+    render(reviewsData);
+  });
+
+  init();
 })();
 </script>
 </body>
