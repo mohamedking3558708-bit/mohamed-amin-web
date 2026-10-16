@@ -1,23 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T21:32:50.573Z",
+  "updatedAt": "2026-10-16T20:22:29.092Z",
   "heroVideos": [
     {
-      "id": "hero-mva1u431-h8g0d",
-      "url": "/api/media/video-9ee89cb9-5714-475f-811e-2c24f0fba091.webm",
+      "id": "hero-mvbey3r1-c28ph",
+      "url": "/api/media/video-ba0bdfc9-972f-45ce-a85d-4385e9b8a6ba.mp4",
       "showDesktop": true,
-      "showMobile": true
-    },
-    {
-      "id": "hero-mva1uyvy-yih23",
-      "url": "/api/media/video-b406d7da-48a4-423e-8523-e3c0bc6253a1.webm",
-      "showDesktop": true,
-      "showMobile": true
-    },
-    {
-      "id": "hero-mva1v4en-6pzso",
-      "url": "/api/media/video-6f363e60-a695-424d-b32b-80255f1093ca.webm",
-      "showDesktop": false,
       "showMobile": true
     }
   ],
@@ -29,33 +17,6 @@
       "order": 1
     }
   ],
-  "items": [
-    {
-      "id": "work-mv8trjab-8y9ny",
-      "type": "video",
-      "title": "اعلان تطبيق البرهان",
-      "sectionId": "section-mv8tl2p8-4st9c",
-      "visible": true,
-      "storage": "r2",
-      "mediaType": "r2",
-      "videoUrl": "/api/media/video-3f6d73ef-bc34-44d0-8ac4-f44db07b0c0c.mp4",
-      "thumbnailUrl": "",
-      "orientation": "vertical",
-      "showOnHome": true
-    },
-    {
-      "id": "work-mv8vkwsn-ifnu9",
-      "type": "video",
-      "title": "ريلز شركة البرهان للمحاماه",
-      "sectionId": "section-mv8tl2p8-4st9c",
-      "visible": true,
-      "storage": "r2",
-      "mediaType": "r2",
-      "videoUrl": "/api/media/video-d6864555-ace9-4517-b28f-d807b1953a33.mp4",
-      "thumbnailUrl": "",
-      "orientation": "vertical",
-      "showOnHome": true
-    }
-  ],
+  "items": [],
   "reviews": []
 }
