@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T22:14:46.829Z",
+  "updatedAt": "2026-10-16T22:17:53.313Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -113,11 +113,11 @@
     {
       "id": "review-mvbik1nj-qhj5j",
       "mode": "image",
-      "clientName": "",
+      "clientName": "عميل",
       "content": "",
       "detail": "",
       "imageUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-234c3153-41cd-400b-8cc8-60a5a2e0def9.jpg",
-      "label": "",
+      "label": "عميل",
       "visible": true
     },
     {
