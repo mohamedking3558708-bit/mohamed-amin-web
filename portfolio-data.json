@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T20:25:23.820Z",
+  "updatedAt": "2026-10-16T21:19:04.631Z",
   "heroVideos": [
     {
       "id": "hero-mvbey3r1-c28ph",
@@ -29,6 +29,20 @@
       "order": 1
     }
   ],
-  "items": [],
+  "items": [
+    {
+      "id": "work-mvbh022s-vjib4",
+      "type": "video",
+      "title": "اعلان عن ستوديو تصوير",
+      "sectionId": "section-mv8tl2p8-4st9c",
+      "visible": true,
+      "storage": "bunny",
+      "mediaType": "bunny",
+      "videoUrl": "/api/media/video-2b4bd02a-2c17-4bcb-95c6-5edd71448b3d.mp4",
+      "thumbnailUrl": "https://raw.githubusercontent.com/mohamedking3558708-bit/mohamed-amin-web/main/uploads/images/image-2a56f16a-7777-458f-843d-e7ba39aaeac3.jpg",
+      "orientation": "vertical",
+      "showOnHome": true
+    }
+  ],
   "reviews": []
 }
